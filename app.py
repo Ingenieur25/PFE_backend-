@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Import CORS to handle cross-origin requests
+from flask_cors import CORS  
 import joblib
 import pandas as pd
 
@@ -19,8 +19,11 @@ population_poly = joblib.load('poly_population_year_only.pkl')
 # Initialize Flask app
 app = Flask(__name__)
 
-# Enable CORS for all routes
-CORS(app)
+CORS(app, origins=[
+    "https://pfe-frontend-bdaa.vercel.app",
+    "http://localhost:3000"
+])
+
 
 # Route for predicting GDP
 @app.route('/predict/gdp', methods=['GET'])
@@ -31,7 +34,7 @@ def predict_gdp():
         future_data_poly = gdp_poly.transform(future_data)
         future_data_scaled = gdp_scaler.transform(future_data_poly)
         future_gdp_prediction = gdp_model.predict(future_data_scaled)
-        return jsonify({'predicted_gdp': future_gdp_prediction[0]})
+        return jsonify({'predicted_gdp': float(future_gdp_prediction[0])})
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
@@ -44,7 +47,7 @@ def predict_life_expectancy():
         future_data_poly = life_expectancy_poly.transform(future_data)
         future_data_scaled = life_expectancy_scaler.transform(future_data_poly)
         future_life_expectancy_prediction = life_expectancy_model.predict(future_data_scaled)
-        return jsonify({'predicted_life_expectancy': future_life_expectancy_prediction[0]})
+        return jsonify({'predicted_life_expectancy': float(future_life_expectancy_prediction[0])})
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
@@ -57,7 +60,7 @@ def predict_population():
         future_data_poly = population_poly.transform(future_data)
         future_data_scaled = population_scaler.transform(future_data_poly)
         future_population_prediction = population_model.predict(future_data_scaled)
-        return jsonify({'predicted_population': future_population_prediction[0]})
+        return jsonify({'predicted_population': float(future_population_prediction[0])})
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
