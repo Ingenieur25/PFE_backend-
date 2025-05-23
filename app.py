@@ -19,8 +19,12 @@ population_poly = joblib.load('poly_population_year_only.pkl')
 # Initialize Flask app
 app = Flask(__name__)
 
+# Allow only your Vercel frontend origin
 CORS(app, origins=[
-    "https://pfe-frontend-bdaa.vercel.app",
+    "https://pfe-frontend-one.vercel.app",
+    "https://pfe-frontend-bdaa.vercel.app",  # If you use more than one Vercel deployment, add them here
+    "https://pfe-frontend-bjxt.vercel.app",
+    "https://pfe-frontend-viu8.vercel.app",
     "http://localhost:3000"
 ])
 
